@@ -1,0 +1,60 @@
+{
+  "name": "vscode-comment-autocomplete",
+  "displayName": "comment-autocomplete",
+  "description": "An extension to autocomplete the comment.",
+  "version": "0.1.0",
+  "publisher": "axetroy",
+  "engines": {
+    "vscode": "^1.21.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axetroy/vscode-comment-autocomplete.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/axetroy/vscode-comment-autocomplete/issues"
+  },
+  "homepage": "https://github.com/axetroy/vscode-comment-autocomplete#readme",
+  "keywords": [
+    "javascript",
+    "typescript"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "icon": "resources/icon.png",
+  "main": "./out/extension",
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
+    "onLanguage:vue",
+    "onLanguage:html",
+    "onLanguage:css",
+    "onLanguage:less",
+    "onLanguage:scss",
+    "onLanguage:sass",
+    "onLanguage:markdown"
+  ],
+  "contributes": {},
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./ && npm run lint",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "lint": "tslint -p ./ -c tslint.json",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "publish": "npx vsce publish"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.10.4",
+    "conventional-changelog-cli": "^2.0.12",
+    "tslint": "^5.13.1",
+    "tslint-config-prettier": "^1.18.0",
+    "vscode": "^1.1.30"
+  }
+}
