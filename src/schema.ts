@@ -9,22 +9,22 @@ export interface ISchema {
 }
 
 interface ICommentRegExp {
-  start: RegExp;
-  end: RegExp;
+  start: string;
+  end: string;
 }
 
 const commentStyle: { [k: string]: ICommentRegExp } = {
   slash: {
-    start: /\/*\s*$/,
-    end: /.*/
+    start: "\\/*\\**$",
+    end: ".*"
   },
   star: {
-    start: /\/*\**$/,
-    end: /\**\//
+    start: "\\/*\\**$",
+    end: "\\**\\/"
   },
   dash: {
-    start: /<\!?-*\s*$/,
-    end: /-*>/
+    start: "<\\!-*\\s*$",
+    end: "-*>"
   }
 };
 
@@ -122,13 +122,7 @@ export const schemas: ISchemas[] = [
   },
   // css
   {
-    selector: [
-      Language.css,
-      Language.scss,
-      Language.less,
-      Language.sass,
-      Language.markdown
-    ],
+    selector: [Language.css, Language.scss, Language.less, Language.sass],
     schemas: [
       ...filter(common, commentStyle.star),
       ...filter(prettier, commentStyle.star)
@@ -142,7 +136,7 @@ export const schemas: ISchemas[] = [
       ...filter(common, commentStyle.dash),
       ...filter(prettier, commentStyle.dash)
     ],
-    triggerCharacters: ["<"]
+    triggerCharacters: ["<", "!", "-"]
   }
 ];
 

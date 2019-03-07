@@ -19,7 +19,7 @@ export function activate(context: VSCODE.ExtensionContext) {
       const line = document.lineAt(position.line).text;
       const prefix = line
         .slice(0, position.character)
-        .match(schema.style.start);
+        .match(new RegExp(schema.style.start));
 
       // the text insert start and end
       const start = position.translate(0, prefix ? -prefix[0].length : 0);
@@ -39,9 +39,34 @@ export function activate(context: VSCODE.ExtensionContext) {
             position: VSCODE.Position,
             token: VSCODE.CancellationToken
           ) => {
-            return s.schemas.map(
-              v => new CommentCompletionItem(v, document, position)
-            );
+            const completes: CommentCompletionItem[] = [];
+            const line = document.lineAt(position.line).text;
+            const prefix = line.slice(0, position.character);
+            for (const schema of s.schemas) {
+              // if line a new line
+              if (position.character === 1) {
+                completes.push(
+                  new CommentCompletionItem(schema, document, position)
+                );
+                continue;
+              }
+
+              // the the whole line match
+              if (new RegExp("^" + schema.style.start).test(line)) {
+                completes.push(
+                  new CommentCompletionItem(schema, document, position)
+                );
+                continue;
+              }
+
+              const validReg = new RegExp("\\s" + schema.style.start);
+              if (validReg.test(prefix)) {
+                completes.push(
+                  new CommentCompletionItem(schema, document, position)
+                );
+              }
+            }
+            return completes;
           }
         },
         ...s.triggerCharacters
