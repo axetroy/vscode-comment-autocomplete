@@ -59,8 +59,20 @@ export function activate(context: VSCODE.ExtensionContext) {
                 continue;
               }
 
-              const validReg = new RegExp("\\s" + schema.style.start);
-              if (validReg.test(prefix)) {
+              const validRegWithSecondType = new RegExp(schema.style.start);
+              const validMatcher = prefix.match(validRegWithSecondType);
+
+              if (validMatcher) {
+                if (validMatcher[0].length >= 2) {
+                  completes.push(
+                    new CommentCompletionItem(schema, document, position)
+                  );
+                  continue;
+                }
+              }
+
+              const validRegWithSpace = new RegExp("\\s" + schema.style.start);
+              if (validRegWithSpace.test(prefix)) {
                 completes.push(
                   new CommentCompletionItem(schema, document, position)
                 );

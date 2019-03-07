@@ -84,8 +84,6 @@ interface ISchemas {
   triggerCharacters: string[];
 }
 
-console.log(filter(common, [commentStyle.slash]));
-
 export const schemas: ISchemas[] = [
   // common files
   {
