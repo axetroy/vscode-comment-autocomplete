@@ -43,9 +43,9 @@ export enum Language {
 }
 
 enum Style {
-  slash = "//",
-  star = "/*",
-  dash = "<!--"
+  slash,
+  star,
+  dash
 }
 
 const common: ISchema[] = [
@@ -84,8 +84,10 @@ interface ISchemas {
   triggerCharacters: string[];
 }
 
+console.log(filter(common, [commentStyle.slash]));
+
 export const schemas: ISchemas[] = [
-  // 通用的javascript/vue
+  // common files
   {
     selector: [
       Language.js,
@@ -94,33 +96,28 @@ export const schemas: ISchemas[] = [
       Language.tsx,
       Language.vue
     ],
-    schemas: [
-      ...filter(common, commentStyle.slash),
-      ...filter(common, commentStyle.star)
-    ],
+    schemas: [...filter(common, [commentStyle.slash, commentStyle.star])],
     triggerCharacters: ["/", "*"]
   },
-  // javascript
+  // javascript like
   {
     selector: [Language.js, Language.jsx],
     schemas: [
       ...eslint,
-      ...filter(prettier, commentStyle.slash),
-      ...filter(prettier, commentStyle.star)
+      ...filter(prettier, [commentStyle.slash, commentStyle.star])
     ],
     triggerCharacters: ["/", "*"]
   },
-  // typescript
+  // typescript like
   {
     selector: [Language.ts, Language.tsx],
     schemas: [
       ...typescript,
-      ...filter(prettier, commentStyle.slash),
-      ...filter(prettier, commentStyle.star)
+      ...filter(prettier, [commentStyle.slash, commentStyle.star])
     ],
     triggerCharacters: ["/", "*"]
   },
-  // css
+  // css like
   {
     selector: [Language.css, Language.scss, Language.less, Language.sass],
     schemas: [
@@ -132,17 +129,24 @@ export const schemas: ISchemas[] = [
   // html/markdown
   {
     selector: [Language.html, Language.markdown],
-    schemas: [
-      ...filter(common, commentStyle.dash),
-      ...filter(prettier, commentStyle.dash)
-    ],
+    schemas: [...filter(common, [commentStyle.dash, commentStyle.dash])],
     triggerCharacters: ["<", "!", "-"]
   }
 ];
 
 // filter schema
-function filter(schema: ISchema[], style: ICommentRegExp) {
-  return schema.filter(v => v.style.start === style.start);
+function filter(
+  schema: ISchema[],
+  style: ICommentRegExp | ICommentRegExp[]
+): ISchema[] {
+  const styles = Array.isArray(style) ? style : [style];
+  const result: ISchema[] = [];
+  for (const s of schema) {
+    if (styles.includes(s.style)) {
+      result.push(s);
+    }
+  }
+  return result;
 }
 
 // generate schema
@@ -170,6 +174,7 @@ function generate(name: string, styles: Style | Style[]): ISchema[] {
         style = commentStyle.dash;
         break;
       default:
+        prefix = "// ";
         style = commentStyle.slash;
     }
     return {

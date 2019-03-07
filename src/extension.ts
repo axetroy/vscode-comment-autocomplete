@@ -64,6 +64,7 @@ export function activate(context: VSCODE.ExtensionContext) {
                 completes.push(
                   new CommentCompletionItem(schema, document, position)
                 );
+                continue;
               }
             }
             return completes;
