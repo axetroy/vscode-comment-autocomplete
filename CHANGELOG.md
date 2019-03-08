@@ -1,3 +1,24 @@
+# [0.4.0](https://github.com/axetroy/vscode-comment-autocomplete/compare/v0.3.4...v0.4.0) (2019-03-08)
+
+
+### Features
+
+* add % style comment of languages ([a252bc1](https://github.com/axetroy/vscode-comment-autocomplete/commit/a252bc1))
+* follow the spec https://www.python.org/dev/peps/pep-0350/ ([ac1ebbc](https://github.com/axetroy/vscode-comment-autocomplete/commit/ac1ebbc))
+* support -- style comment of languages ([23b9787](https://github.com/axetroy/vscode-comment-autocomplete/commit/23b9787))
+* support ; style comment of languages ([a854380](https://github.com/axetroy/vscode-comment-autocomplete/commit/a854380))
+* support diagram ([9eb197e](https://github.com/axetroy/vscode-comment-autocomplete/commit/9eb197e))
+* support hackshell ([3d75e78](https://github.com/axetroy/vscode-comment-autocomplete/commit/3d75e78))
+* support jsonc ([25d7940](https://github.com/axetroy/vscode-comment-autocomplete/commit/25d7940))
+* support more Language ([e45a00b](https://github.com/axetroy/vscode-comment-autocomplete/commit/e45a00b))
+* support most of languages ([18df071](https://github.com/axetroy/vscode-comment-autocomplete/commit/18df071))
+* support nim ([a7bf224](https://github.com/axetroy/vscode-comment-autocomplete/commit/a7bf224))
+* support powershell ([84d28d3](https://github.com/axetroy/vscode-comment-autocomplete/commit/84d28d3))
+* support terraform ([da68761](https://github.com/axetroy/vscode-comment-autocomplete/commit/da68761))
+* support Visual Basic ([26a9474](https://github.com/axetroy/vscode-comment-autocomplete/commit/26a9474))
+
+
+
 ## [0.3.4](https://github.com/axetroy/vscode-comment-autocomplete/compare/v0.3.3...v0.3.4) (2019-03-08)
 
 
