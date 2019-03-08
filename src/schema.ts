@@ -16,7 +16,8 @@ const commentStyle: { [k: string]: matcher } = {
   slash: /\/{1,}\s*$/,
   star: /\/\**\s*$/,
   dash: /<!-*\s*$/,
-  hash: /#{1,}\s*$/
+  hash: /#{1,}\s*$/,
+  hashBracket: /#\[\s*$/
 };
 
 export enum Language {
@@ -74,23 +75,34 @@ export enum Language {
   elixir = "elixir",
   python = "python",
   dotenv = "dotenv",
-  gitignore = "gitignore"
+  gitignore = "gitignore",
+  // support #[ ]# styles
+  nim = "nim"
 }
 
 enum Style {
   slash,
   star,
   dash,
-  hash
+  hash,
+  hashBracket
 }
 
 const common: ISchema[] = [
-  ...generate("TODO", [Style.slash, Style.star, Style.dash, Style.hash], {
-    text: "TODO: ${do what?}"
-  }),
-  ...generate("FIXME", [Style.slash, Style.star, Style.dash, Style.hash], {
-    text: "FIXME: ${fix what?}"
-  })
+  ...generate(
+    "TODO",
+    [Style.slash, Style.star, Style.dash, Style.hash, Style.hashBracket],
+    {
+      text: "TODO: ${do what?}"
+    }
+  ),
+  ...generate(
+    "FIXME",
+    [Style.slash, Style.star, Style.dash, Style.hash, Style.hashBracket],
+    {
+      text: "FIXME: ${fix what?}"
+    }
+  )
 ];
 
 const eslint: ISchema[] = [
@@ -248,6 +260,12 @@ export const schemas: ISchemas[] = [
     ],
     schemas: [...filter(common, [commentStyle.hash])],
     triggerCharacters: ["#"]
+  },
+  // #[ ]# style
+  {
+    selector: [Language.nim],
+    schemas: [...filter(common, [commentStyle.hashBracket])],
+    triggerCharacters: ["#", "["]
   }
 ];
 
@@ -294,6 +312,11 @@ function generate(
       case Style.hash:
         prefix = "# ";
         style = commentStyle.hash;
+        break;
+      case Style.hashBracket:
+        prefix = "#[ ";
+        suffix = " ]#";
+        style = commentStyle.hashBracket;
         break;
       default:
         prefix = "// ";
