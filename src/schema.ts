@@ -15,11 +15,11 @@ interface ICommentRegExp {
 
 const commentStyle: { [k: string]: ICommentRegExp } = {
   slash: {
-    start: "\\/*\\**$",
+    start: "\\/*\\**\\s*$",
     end: ".*"
   },
   star: {
-    start: "\\/*\\**$",
+    start: "\\/*\\**\\s*$",
     end: "\\**\\/"
   },
   dash: {
@@ -59,6 +59,15 @@ const eslint: ISchema[] = [
   ...generate("eslint-disable-next-line", [Style.slash, Style.star])
 ];
 
+const jslint: ISchema[] = [
+  ...generate("jshint ignore:start", [Style.slash, Style.star]),
+  ...generate("jshint ignore:end", [Style.slash, Style.star]),
+  ...generate("jshint strict: true", [Style.slash, Style.star]),
+  ...generate("jslint vars: true", [Style.slash, Style.star])
+];
+
+const webpack: ISchema[] = [...generate("webpackChunkName", [Style.star])];
+
 const prettier: ISchema[] = [
   ...generate("prettier-ignore", [Style.slash, Style.star, Style.dash]),
   ...generate("prettier-ignore-attribute", [Style.dash]),
@@ -67,7 +76,10 @@ const prettier: ISchema[] = [
 ];
 
 const typescript: ISchema[] = [
-  ...generate("@ts-ignore", [Style.slash, Style.star]),
+  ...generate("@ts-ignore", [Style.slash, Style.star])
+];
+
+const tslint: ISchema[] = [
   ...generate("tslint:enable", [Style.slash, Style.star]),
   ...generate("tslint:disable", [Style.slash, Style.star]),
   ...generate("tslint:disable:rule1 rule2 rule3...", [Style.slash, Style.star]),
@@ -95,25 +107,29 @@ export const schemas: ISchemas[] = [
       Language.vue
     ],
     schemas: [...filter(common, [commentStyle.slash, commentStyle.star])],
-    triggerCharacters: ["/", "*"]
+    triggerCharacters: ["/", "*", " "]
   },
   // javascript like
   {
     selector: [Language.js, Language.jsx],
     schemas: [
       ...eslint,
+      ...jslint,
+      ...webpack,
       ...filter(prettier, [commentStyle.slash, commentStyle.star])
     ],
-    triggerCharacters: ["/", "*"]
+    triggerCharacters: ["/", "*", " "]
   },
   // typescript like
   {
     selector: [Language.ts, Language.tsx],
     schemas: [
       ...typescript,
+      ...tslint,
+      ...webpack,
       ...filter(prettier, [commentStyle.slash, commentStyle.star])
     ],
-    triggerCharacters: ["/", "*"]
+    triggerCharacters: ["/", "*", " "]
   },
   // css like
   {
@@ -122,13 +138,13 @@ export const schemas: ISchemas[] = [
       ...filter(common, commentStyle.star),
       ...filter(prettier, commentStyle.star)
     ],
-    triggerCharacters: ["/", "*"]
+    triggerCharacters: ["/", "*", " "]
   },
   // html/markdown
   {
     selector: [Language.html, Language.markdown],
     schemas: [...filter(common, [commentStyle.dash, commentStyle.dash])],
-    triggerCharacters: ["<", "!", "-"]
+    triggerCharacters: ["<", "!", "-", " "]
   }
 ];
 
