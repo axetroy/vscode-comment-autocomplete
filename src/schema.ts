@@ -90,9 +90,7 @@ const prettier: ISchema[] = [
   ...generate("prettier-ignore-end", [Style.dash])
 ];
 
-const typescript: ISchema[] = [
-  ...generate("@ts-ignore", [Style.slash, Style.star])
-];
+const typescript: ISchema[] = [...generate("@ts-ignore", [Style.slash])];
 
 const tslint: ISchema[] = [
   ...generate("tslint:enable", [Style.slash, Style.star]),
