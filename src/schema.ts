@@ -22,7 +22,8 @@ const commentStyle: { [k: string]: matcher } = {
   dashdash: /--{1,}\s*$/,
   dash: /-{1,}\s*$/,
   quote: /'\s*$/,
-  percent: /\%\s*$/
+  percent: /\%\s*$/,
+  semicolon: /\;\s*$/
 };
 
 export enum Language {
@@ -101,7 +102,11 @@ export enum Language {
   bibtex = "bibtex",
   erlang = "erlang",
   latex = "latex",
-  matlab = "matlab"
+  matlab = "matlab",
+  // ; style
+  clojure = "clojure",
+  racket = "racket",
+  lisp = "lisp"
 }
 
 enum Style {
@@ -114,7 +119,8 @@ enum Style {
   dashdash,
   dash,
   quote,
-  percent
+  percent,
+  semicolon
 }
 
 const common: ISchema[] = [
@@ -130,7 +136,8 @@ const common: ISchema[] = [
       Style.dashdash,
       Style.dash,
       Style.quote,
-      Style.percent
+      Style.percent,
+      Style.semicolon
     ],
     {
       text: "TODO: ${do what?}"
@@ -148,7 +155,8 @@ const common: ISchema[] = [
       Style.dashdash,
       Style.dash,
       Style.quote,
-      Style.percent
+      Style.percent,
+      Style.semicolon
     ],
     {
       text: "FIXME: ${fix what?}"
@@ -359,6 +367,12 @@ export const schemas: ISchemas[] = [
     ],
     schemas: [...filter(common, [commentStyle.percent])],
     triggerCharacters: ["%", " "]
+  },
+  // ;; style
+  {
+    selector: [Language.clojure, Language.racket, Language.lisp],
+    schemas: [...filter(common, [commentStyle.semicolon])],
+    triggerCharacters: [";", " "]
   }
 ];
 
@@ -431,6 +445,10 @@ function generate(
       case Style.percent:
         prefix = "% ";
         style = commentStyle.percent;
+        break;
+      case Style.semicolon:
+        prefix = ";; ";
+        style = commentStyle.semicolon;
         break;
       default:
         prefix = "// ";
