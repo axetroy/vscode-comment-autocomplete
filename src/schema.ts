@@ -20,24 +20,61 @@ const commentStyle: { [k: string]: matcher } = {
 };
 
 export enum Language {
+  // the language support /* */ and // style
   js = "javascript",
   jsx = "javascriptreact",
   ts = "typescript",
   tsx = "typescriptreact",
+  golang = "go",
+  dart = "dart",
+  al = "al",
+  c = "c",
+  cpp = "cpp",
+  csharp = "csharp",
+  flax = "flax",
+  fsharp = "fsharp",
+  haxe = "haxe",
+  java = "java",
+  jsonc = "jsonc",
+  less = "less",
+  pascal = "pascal",
+  objectpascal = "objectpascal",
+  php = "php",
+  rust = "rust",
+  scala = "scala",
+  swift = "swift",
+  verilog = "verilog",
+  // the language only support // style
+  asciidoc = "asciidoc",
+  // the language only support /* */ style
   css = "css",
   scss = "scss",
-  less = "less",
   sass = "sass",
+  stylus = "stylus",
+  vue = "vue",
+  // the language only support <!-- --> style
   html = "html",
   xml = "xml",
-  vue = "vue",
   markdown = "markdown",
-  jsonc = "jsonc",
+  // the language only support # style
   yaml = "yaml",
-  bash = "shellscript",
+  shellscript = "shellscript",
   makefile = "makefile",
-  golang = "go",
-  dart = "dart"
+  coffeescript = "coffeescript",
+  dockerfile = "dockerfile",
+  gdscript = "gdscript",
+  graphql = "graphql",
+  julia = "julia",
+  perl = "perl",
+  perl6 = "perl6",
+  puppet = "puppet",
+  r = "r",
+  ruby = "ruby",
+  tcl = "tcl",
+  elixir = "elixir",
+  python = "python",
+  dotenv = "dotenv",
+  gitignore = "gitignore"
 }
 
 enum Style {
@@ -111,7 +148,7 @@ interface ISchemas {
 }
 
 export const schemas: ISchemas[] = [
-  // common files
+  // /* */ and // style
   {
     selector: [
       Language.js,
@@ -121,12 +158,27 @@ export const schemas: ISchemas[] = [
       Language.vue,
       Language.jsonc,
       Language.golang,
-      Language.dart
+      Language.dart,
+      Language.al,
+      Language.c,
+      Language.cpp,
+      Language.csharp,
+      Language.flax,
+      Language.fsharp,
+      Language.haxe,
+      Language.java,
+      Language.pascal,
+      Language.objectpascal,
+      Language.php,
+      Language.rust,
+      Language.scala,
+      Language.swift,
+      Language.verilog
     ],
     schemas: [...filter(common, [commentStyle.slash, commentStyle.star])],
     triggerCharacters: ["/", "*", " "]
   },
-  // javascript like
+  // javascript
   {
     selector: [Language.js, Language.jsx],
     schemas: [
@@ -137,7 +189,7 @@ export const schemas: ISchemas[] = [
     ],
     triggerCharacters: ["/", "*", " "]
   },
-  // typescript like
+  // typescript
   {
     selector: [Language.ts, Language.tsx],
     schemas: [
@@ -148,16 +200,22 @@ export const schemas: ISchemas[] = [
     ],
     triggerCharacters: ["/", "*", " "]
   },
-  // css like
+  // // style
   {
-    selector: [Language.css, Language.scss, Language.less, Language.sass],
+    selector: [Language.asciidoc],
+    schemas: [...filter(common, commentStyle.slash)],
+    triggerCharacters: ["/"]
+  },
+  // /* */ style
+  {
+    selector: [Language.css, Language.scss, Language.sass, Language.stylus],
     schemas: [
       ...filter(common, commentStyle.star),
       ...filter(prettier, commentStyle.star)
     ],
     triggerCharacters: ["/", "*", " "]
   },
-  // html/markdown/xml
+  // <!-- --> style
   {
     selector: [Language.html, Language.markdown, Language.xml],
     schemas: [
@@ -166,9 +224,28 @@ export const schemas: ISchemas[] = [
     ],
     triggerCharacters: ["<", "!", "-", " "]
   },
-  // yaml/yml like hash comment
+  // # style
   {
-    selector: [Language.yaml, Language.bash, Language.makefile],
+    selector: [
+      Language.yaml,
+      Language.shellscript,
+      Language.makefile,
+      Language.coffeescript,
+      Language.dockerfile,
+      Language.gdscript,
+      Language.graphql,
+      Language.julia,
+      Language.perl,
+      Language.perl6,
+      Language.puppet,
+      Language.r,
+      Language.ruby,
+      Language.tcl,
+      Language.elixir,
+      Language.python,
+      Language.dotenv,
+      Language.gitignore
+    ],
     schemas: [...filter(common, [commentStyle.hash])],
     triggerCharacters: ["#"]
   }

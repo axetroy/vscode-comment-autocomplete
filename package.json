@@ -26,24 +26,7 @@
   "icon": "resources/icon.png",
   "main": "./out/extension",
   "activationEvents": [
-    "onLanguage:javascript",
-    "onLanguage:javascriptreact",
-    "onLanguage:typescript",
-    "onLanguage:typescriptreact",
-    "onLanguage:vue",
-    "onLanguage:html",
-    "onLanguage:xml",
-    "onLanguage:css",
-    "onLanguage:less",
-    "onLanguage:scss",
-    "onLanguage:sass",
-    "onLanguage:markdown",
-    "onLanguage:jsonc",
-    "onLanguage:yaml",
-    "onLanguage:shellscript",
-    "onLanguage:makefile",
-    "onLanguage:go",
-    "onLanguage:dart"
+    "*"
   ],
   "contributes": {
     "commands": [
