@@ -15,11 +15,12 @@ export interface ISchema {
 const commentStyle: { [k: string]: matcher } = {
   slash: /\/{1,}\s*$/,
   star: /\/\**\s*$/,
-  dash: /<!-*\s*$/,
+  arrowDash: /<!-*\s*$/,
   hash: /#{1,}\s*$/,
   hashBracket: /#\[\s*$/,
   hashArrow: /<#\s*$/,
-  dashdash: /--{1,}\s*$/
+  dashdash: /--{1,}\s*$/,
+  dash: /-{1,}\s*$/
 };
 
 export enum Language {
@@ -88,17 +89,20 @@ export enum Language {
   lua = "lua",
   pig = "pig",
   plsql = "plsql",
-  sql = "sql"
+  sql = "sql",
+  // - style
+  haskell = "haskell"
 }
 
 enum Style {
   slash,
   star,
-  dash,
+  arrowDash,
   hash,
   hashBracket,
   hashArrow,
-  dashdash
+  dashdash,
+  dash
 }
 
 const common: ISchema[] = [
@@ -107,11 +111,12 @@ const common: ISchema[] = [
     [
       Style.slash,
       Style.star,
-      Style.dash,
+      Style.arrowDash,
       Style.hash,
       Style.hashBracket,
       Style.hashArrow,
-      Style.dashdash
+      Style.dashdash,
+      Style.dash
     ],
     {
       text: "TODO: ${do what?}"
@@ -122,11 +127,12 @@ const common: ISchema[] = [
     [
       Style.slash,
       Style.star,
-      Style.dash,
+      Style.arrowDash,
       Style.hash,
       Style.hashBracket,
       Style.hashArrow,
-      Style.dashdash
+      Style.dashdash,
+      Style.dash
     ],
     {
       text: "FIXME: ${fix what?}"
@@ -162,12 +168,12 @@ const webpack: ISchema[] = [
 ];
 
 const prettier: ISchema[] = [
-  ...generate("prettier-ignore", [Style.slash, Style.star, Style.dash]),
-  ...generate("prettier-ignore-attribute", [Style.dash], {
+  ...generate("prettier-ignore", [Style.slash, Style.star, Style.arrowDash]),
+  ...generate("prettier-ignore-attribute", [Style.arrowDash], {
     text: "prettier-ignore-attribute ${attribute1, attribute2}"
   }),
-  ...generate("prettier-ignore-start", [Style.dash]),
-  ...generate("prettier-ignore-end", [Style.dash])
+  ...generate("prettier-ignore-start", [Style.arrowDash]),
+  ...generate("prettier-ignore-end", [Style.arrowDash])
 ];
 
 const typescript: ISchema[] = [...generate("@ts-ignore", [Style.slash])];
@@ -260,8 +266,8 @@ export const schemas: ISchemas[] = [
   {
     selector: [Language.html, Language.markdown, Language.xml],
     schemas: [
-      ...filter(common, [commentStyle.dash]),
-      ...filter(prettier, [commentStyle.dash])
+      ...filter(common, [commentStyle.arrowDash]),
+      ...filter(prettier, [commentStyle.arrowDash])
     ],
     triggerCharacters: ["<", "!", "-", " "]
   },
@@ -314,6 +320,12 @@ export const schemas: ISchemas[] = [
     ],
     schemas: [...filter(common, [commentStyle.dashdash])],
     triggerCharacters: ["-", " "]
+  },
+  // - style
+  {
+    selector: [Language.haskell],
+    schemas: [...filter(common, [commentStyle.dash])],
+    triggerCharacters: ["-", " "]
   }
 ];
 
@@ -352,10 +364,10 @@ function generate(
         suffix = " */";
         style = commentStyle.star;
         break;
-      case Style.dash:
+      case Style.arrowDash:
         prefix = "<!-- ";
         suffix = " -->";
-        style = commentStyle.dash;
+        style = commentStyle.arrowDash;
         break;
       case Style.hash:
         prefix = "# ";
@@ -374,6 +386,10 @@ function generate(
       case Style.dashdash:
         prefix = "-- ";
         style = commentStyle.dashdash;
+        break;
+      case Style.dash:
+        prefix = "- ";
+        style = commentStyle.dash;
         break;
       default:
         prefix = "// ";
