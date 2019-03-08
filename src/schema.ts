@@ -94,7 +94,8 @@ export enum Language {
   // - style
   haskell = "haskell",
   // ' style
-  vb = "vb"
+  vb = "vb",
+  diagram = "diagram"
 }
 
 enum Style {
@@ -335,7 +336,7 @@ export const schemas: ISchemas[] = [
   },
   // ' style
   {
-    selector: [Language.vb],
+    selector: [Language.vb, Language.diagram],
     schemas: [...filter(common, [commentStyle.quote])],
     triggerCharacters: ["'", " "]
   }
