@@ -20,7 +20,8 @@ const commentStyle: { [k: string]: matcher } = {
   hashBracket: /#\[\s*$/,
   hashArrow: /<#\s*$/,
   dashdash: /--{1,}\s*$/,
-  dash: /-{1,}\s*$/
+  dash: /-{1,}\s*$/,
+  quote: /'\s*$/
 };
 
 export enum Language {
@@ -91,7 +92,9 @@ export enum Language {
   plsql = "plsql",
   sql = "sql",
   // - style
-  haskell = "haskell"
+  haskell = "haskell",
+  // ' style
+  vb = "vb"
 }
 
 enum Style {
@@ -102,7 +105,8 @@ enum Style {
   hashBracket,
   hashArrow,
   dashdash,
-  dash
+  dash,
+  quote
 }
 
 const common: ISchema[] = [
@@ -116,7 +120,8 @@ const common: ISchema[] = [
       Style.hashBracket,
       Style.hashArrow,
       Style.dashdash,
-      Style.dash
+      Style.dash,
+      Style.quote
     ],
     {
       text: "TODO: ${do what?}"
@@ -132,7 +137,8 @@ const common: ISchema[] = [
       Style.hashBracket,
       Style.hashArrow,
       Style.dashdash,
-      Style.dash
+      Style.dash,
+      Style.quote
     ],
     {
       text: "FIXME: ${fix what?}"
@@ -326,6 +332,12 @@ export const schemas: ISchemas[] = [
     selector: [Language.haskell],
     schemas: [...filter(common, [commentStyle.dash])],
     triggerCharacters: ["-", " "]
+  },
+  // ' style
+  {
+    selector: [Language.vb],
+    schemas: [...filter(common, [commentStyle.quote])],
+    triggerCharacters: ["'", " "]
   }
 ];
 
@@ -390,6 +402,10 @@ function generate(
       case Style.dash:
         prefix = "- ";
         style = commentStyle.dash;
+        break;
+      case Style.quote:
+        prefix = "' ";
+        style = commentStyle.quote;
         break;
       default:
         prefix = "// ";
