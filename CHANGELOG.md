@@ -1,3 +1,13 @@
+## [0.3.1](https://github.com/axetroy/vscode-comment-autocomplete/compare/v0.3.0...v0.3.1) (2019-03-08)
+
+
+### Features
+
+* improve automatic positioning ([39e2f52](https://github.com/axetroy/vscode-comment-autocomplete/commit/39e2f52))
+* support jshint and improve. close [#3](https://github.com/axetroy/vscode-comment-autocomplete/issues/3) ([c6768f3](https://github.com/axetroy/vscode-comment-autocomplete/commit/c6768f3))
+
+
+
 # [0.3.0](https://github.com/axetroy/vscode-comment-autocomplete/compare/v0.2.0...v0.3.0) (2019-03-07)
 
 
