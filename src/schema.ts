@@ -124,45 +124,107 @@ enum Style {
   semicolon
 }
 
+const commonStyles = [
+  Style.slash,
+  Style.star,
+  Style.arrowDash,
+  Style.hash,
+  Style.hashBracket,
+  Style.hashArrow,
+  Style.dashdash,
+  Style.dash,
+  Style.quote,
+  Style.percent,
+  Style.semicolon
+];
+
+// refs: https://www.python.org/dev/peps/pep-0350/
 const common: ISchema[] = [
-  ...generate(
-    "TODO",
-    [
-      Style.slash,
-      Style.star,
-      Style.arrowDash,
-      Style.hash,
-      Style.hashBracket,
-      Style.hashArrow,
-      Style.dashdash,
-      Style.dash,
-      Style.quote,
-      Style.percent,
-      Style.semicolon
-    ],
-    {
-      text: "TODO: ${do what?}"
-    }
-  ),
-  ...generate(
-    "FIXME",
-    [
-      Style.slash,
-      Style.star,
-      Style.arrowDash,
-      Style.hash,
-      Style.hashBracket,
-      Style.hashArrow,
-      Style.dashdash,
-      Style.dash,
-      Style.quote,
-      Style.percent,
-      Style.semicolon
-    ],
-    {
-      text: "FIXME: ${fix what?}"
-    }
-  )
+  ...generate("TODO", commonStyles, {
+    text: "TODO: ${do something}",
+    document: "TODO: Informal tasks/features that are pending completion."
+  }),
+  ...generate("FIXME", commonStyles, {
+    text: "FIXME: ${bug}",
+    document:
+      "FIXME: Areas of problematic or ugly code needing refactoring or cleanup."
+  }),
+  ...generate("BUG", commonStyles, {
+    text: "BUG: ${#1024}",
+    document: "BUG: Reported defects tracked in bug database."
+  }),
+  ...generate("NOBUG", commonStyles, {
+    text: "NOBUG: ${WONTFIX}",
+    document:
+      "NOBUG: Problems that are well-known but will never be addressed due to design problems or domain limitations."
+  }),
+  ...generate("REQ", commonStyles, {
+    text: "REQ: ${requirements}",
+    document: "REQ: Satisfactions of specific, formal requirements."
+  }),
+  ...generate("RFE", commonStyles, {
+    text: "RFE: ${Requests For Enhancement}",
+    document: "RFE: Roadmap items not yet implemented."
+  }),
+  ...generate("IDEA", commonStyles, {
+    text: "IDEA: ${what ideas}",
+    document: "IDEA: Possible RFE candidates, but less formal than RFE."
+  }),
+  ...generate("???", commonStyles, {
+    text: "???: ${confused here}",
+    document: "???: Misunderstood details."
+  }),
+  ...generate("!!!", commonStyles, {
+    text: "!!!: ${alert}",
+    document: "!!!: In need of immediate attention."
+  }),
+  ...generate("HACK", commonStyles, {
+    text: "HACK: ${HACK}",
+    document:
+      "HACK: Temporary code to force inflexible functionality, or simply a test change, or workaround a known problem."
+  }),
+  ...generate("PORT", commonStyles, {
+    text: "PORT: ${Portability}",
+    document: "PORT: Workarounds specific to OS, Python version, etc."
+  }),
+  ...generate("CAVEAT", commonStyles, {
+    text: "CAVEAT: ${Caveats}",
+    document:
+      "CAVEAT: Implementation details/gotchas that stand out as non-intuitive."
+  }),
+  ...generate("NOTE", commonStyles, {
+    text: "NOTE: ${NOTE}",
+    document:
+      "NOTE: Sections where a code reviewer found something that needs discussion or further investigation."
+  }),
+  ...generate("FAQ", commonStyles, {
+    text: "FAQ: ${The question: the answer}",
+    document: "FAQ: Interesting areas that require external explanation."
+  }),
+  ...generate("GLOSS", commonStyles, {
+    text: "GLOSS: ${Glossary}",
+    document: "GLOSS: Definitions for project glossary."
+  }),
+  ...generate("SEE", commonStyles, {
+    text: "SEE: ${https://xxx.com}",
+    document: "See: Pointers to other code, web link, etc."
+  }),
+  ...generate("TODOC", commonStyles, {
+    text: "TODOC: ${Needs Documentation}",
+    document: "TODOC: Areas of code that still need to be documented."
+  }),
+  ...generate("CRED", commonStyles, {
+    text: "CRED: ${Credits}",
+    document: "CRED: Accreditations for external provision of enlightenment."
+  }),
+  ...generate("STAT", commonStyles, {
+    text: "STAT: ${STAT}",
+    document: "STAT: File-level statistical indicator of maturity of this file."
+  }),
+  ...generate("RVD", commonStyles, {
+    text: "RVD: ${Review message}",
+    document: "RVD: File-level indicator that review was conducted."
+  })
 ];
 
 const eslint: ISchema[] = [
@@ -394,7 +456,7 @@ function filter(schema: ISchema[], style: matcher | matcher[]): ISchema[] {
 function generate(
   name: string,
   styles: Style[],
-  options: { text?: string } = {}
+  options: { text?: string; document?: string } = {}
 ): ISchema[] {
   if (!Array.isArray(styles)) {
     styles = [styles];
@@ -459,6 +521,8 @@ function generate(
     return {
       name: name.split(" ")[0],
       label: prefix + name + suffix,
+      detail: "comment-complete",
+      document: options.document,
       text: prefix + (options.text || name) + suffix,
       style
     };
