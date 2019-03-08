@@ -82,6 +82,7 @@ export enum Language {
   python = "python",
   dotenv = "dotenv",
   gitignore = "gitignore",
+  terraform = "terraform",
   // support #[ ]# style
   nim = "nim",
   // support <# #> style
@@ -315,7 +316,8 @@ export const schemas: ISchemas[] = [
       Language.elixir,
       Language.python,
       Language.dotenv,
-      Language.gitignore
+      Language.gitignore,
+      Language.terraform
     ],
     schemas: [...filter(common, [commentStyle.hash])],
     triggerCharacters: ["#", " "]
