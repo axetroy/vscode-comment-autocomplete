@@ -21,7 +21,8 @@ const commentStyle: { [k: string]: matcher } = {
   hashArrow: /<#\s*$/,
   dashdash: /--{1,}\s*$/,
   dash: /-{1,}\s*$/,
-  quote: /'\s*$/
+  quote: /'\s*$/,
+  percent: /\%\s*$/
 };
 
 export enum Language {
@@ -95,7 +96,12 @@ export enum Language {
   haskell = "haskell",
   // ' style
   vb = "vb",
-  diagram = "diagram"
+  diagram = "diagram",
+  // % style
+  bibtex = "bibtex",
+  erlang = "erlang",
+  latex = "latex",
+  matlab = "matlab"
 }
 
 enum Style {
@@ -107,7 +113,8 @@ enum Style {
   hashArrow,
   dashdash,
   dash,
-  quote
+  quote,
+  percent
 }
 
 const common: ISchema[] = [
@@ -122,7 +129,8 @@ const common: ISchema[] = [
       Style.hashArrow,
       Style.dashdash,
       Style.dash,
-      Style.quote
+      Style.quote,
+      Style.percent
     ],
     {
       text: "TODO: ${do what?}"
@@ -139,7 +147,8 @@ const common: ISchema[] = [
       Style.hashArrow,
       Style.dashdash,
       Style.dash,
-      Style.quote
+      Style.quote,
+      Style.percent
     ],
     {
       text: "FIXME: ${fix what?}"
@@ -339,6 +348,17 @@ export const schemas: ISchemas[] = [
     selector: [Language.vb, Language.diagram],
     schemas: [...filter(common, [commentStyle.quote])],
     triggerCharacters: ["'", " "]
+  },
+  // % style
+  {
+    selector: [
+      Language.bibtex,
+      Language.erlang,
+      Language.latex,
+      Language.matlab
+    ],
+    schemas: [...filter(common, [commentStyle.percent])],
+    triggerCharacters: ["%", " "]
   }
 ];
 
@@ -407,6 +427,10 @@ function generate(
       case Style.quote:
         prefix = "' ";
         style = commentStyle.quote;
+        break;
+      case Style.percent:
+        prefix = "% ";
+        style = commentStyle.percent;
         break;
       default:
         prefix = "// ";
