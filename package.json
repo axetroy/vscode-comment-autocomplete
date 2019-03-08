@@ -2,7 +2,7 @@
   "name": "vscode-comment-autocomplete",
   "displayName": "comment-autocomplete",
   "description": "An extension to autocomplete the comment.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publisher": "axetroy",
   "engines": {
     "vscode": "^1.21.0"
