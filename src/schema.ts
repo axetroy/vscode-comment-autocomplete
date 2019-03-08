@@ -18,7 +18,8 @@ const commentStyle: { [k: string]: matcher } = {
   dash: /<!-*\s*$/,
   hash: /#{1,}\s*$/,
   hashBracket: /#\[\s*$/,
-  hashArrow: /<#\s*$/
+  hashArrow: /<#\s*$/,
+  dashdash: /--{1,}\s*$/
 };
 
 export enum Language {
@@ -80,7 +81,14 @@ export enum Language {
   // support #[ ]# style
   nim = "nim",
   // support <# #> style
-  powershell = "powershell"
+  powershell = "powershell",
+  // support -- styles
+  ada = "ada",
+  hivesql = "hive-sql",
+  lua = "lua",
+  pig = "pig",
+  plsql = "plsql",
+  sql = "sql"
 }
 
 enum Style {
@@ -89,7 +97,8 @@ enum Style {
   dash,
   hash,
   hashBracket,
-  hashArrow
+  hashArrow,
+  dashdash
 }
 
 const common: ISchema[] = [
@@ -101,7 +110,8 @@ const common: ISchema[] = [
       Style.dash,
       Style.hash,
       Style.hashBracket,
-      Style.hashArrow
+      Style.hashArrow,
+      Style.dashdash
     ],
     {
       text: "TODO: ${do what?}"
@@ -115,7 +125,8 @@ const common: ISchema[] = [
       Style.dash,
       Style.hash,
       Style.hashBracket,
-      Style.hashArrow
+      Style.hashArrow,
+      Style.dashdash
     ],
     {
       text: "FIXME: ${fix what?}"
@@ -234,7 +245,7 @@ export const schemas: ISchemas[] = [
   {
     selector: [Language.asciidoc],
     schemas: [...filter(common, commentStyle.slash)],
-    triggerCharacters: ["/"]
+    triggerCharacters: ["/", " "]
   },
   // /* */ style
   {
@@ -277,19 +288,32 @@ export const schemas: ISchemas[] = [
       Language.gitignore
     ],
     schemas: [...filter(common, [commentStyle.hash])],
-    triggerCharacters: ["#"]
+    triggerCharacters: ["#", " "]
   },
   // #[ ]# style
   {
     selector: [Language.nim],
     schemas: [...filter(common, [commentStyle.hashBracket])],
-    triggerCharacters: ["#", "["]
+    triggerCharacters: ["#", "[", " "]
   },
   // <# #> style
   {
     selector: [Language.powershell],
     schemas: [...filter(common, [commentStyle.hashArrow])],
-    triggerCharacters: ["<", "#"]
+    triggerCharacters: ["<", "#", " "]
+  },
+  // -- style
+  {
+    selector: [
+      Language.ada,
+      Language.hivesql,
+      Language.lua,
+      Language.pig,
+      Language.plsql,
+      Language.sql
+    ],
+    schemas: [...filter(common, [commentStyle.dashdash])],
+    triggerCharacters: ["-", " "]
   }
 ];
 
@@ -346,6 +370,10 @@ function generate(
         prefix = "<# ";
         suffix = " #>";
         style = commentStyle.hashArrow;
+        break;
+      case Style.dashdash:
+        prefix = "-- ";
+        style = commentStyle.dashdash;
         break;
       default:
         prefix = "// ";
