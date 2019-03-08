@@ -15,7 +15,8 @@ export interface ISchema {
 const commentStyle: { [k: string]: matcher } = {
   slash: /\/{1,}\s*$/,
   star: /\/\**\s*$/,
-  dash: /<!-*\s*$/
+  dash: /<!-*\s*$/,
+  hash: /#{1,}\s*$/
 };
 
 export enum Language {
@@ -28,22 +29,29 @@ export enum Language {
   less = "less",
   sass = "sass",
   html = "html",
+  xml = "xml",
   vue = "vue",
   markdown = "markdown",
-  jsonc = "jsonc"
+  jsonc = "jsonc",
+  yaml = "yaml",
+  bash = "shellscript",
+  makefile = "makefile",
+  golang = "go",
+  dart = "dart"
 }
 
 enum Style {
   slash,
   star,
-  dash
+  dash,
+  hash
 }
 
 const common: ISchema[] = [
-  ...generate("TODO", [Style.slash, Style.star, Style.dash], {
+  ...generate("TODO", [Style.slash, Style.star, Style.dash, Style.hash], {
     text: "TODO: ${do what?}"
   }),
-  ...generate("FIXME", [Style.slash, Style.star, Style.dash], {
+  ...generate("FIXME", [Style.slash, Style.star, Style.dash, Style.hash], {
     text: "FIXME: ${fix what?}"
   })
 ];
@@ -111,7 +119,9 @@ export const schemas: ISchemas[] = [
       Language.ts,
       Language.tsx,
       Language.vue,
-      Language.jsonc
+      Language.jsonc,
+      Language.golang,
+      Language.dart
     ],
     schemas: [...filter(common, [commentStyle.slash, commentStyle.star])],
     triggerCharacters: ["/", "*", " "]
@@ -147,14 +157,20 @@ export const schemas: ISchemas[] = [
     ],
     triggerCharacters: ["/", "*", " "]
   },
-  // html/markdown
+  // html/markdown/xml
   {
-    selector: [Language.html, Language.markdown],
+    selector: [Language.html, Language.markdown, Language.xml],
     schemas: [
       ...filter(common, [commentStyle.dash]),
       ...filter(prettier, [commentStyle.dash])
     ],
     triggerCharacters: ["<", "!", "-", " "]
+  },
+  // yaml/yml like hash comment
+  {
+    selector: [Language.yaml, Language.bash, Language.makefile],
+    schemas: [...filter(common, [commentStyle.hash])],
+    triggerCharacters: ["#"]
   }
 ];
 
@@ -197,6 +213,10 @@ function generate(
         prefix = "<!-- ";
         suffix = " -->";
         style = commentStyle.dash;
+        break;
+      case Style.hash:
+        prefix = "# ";
+        style = commentStyle.hash;
         break;
       default:
         prefix = "// ";

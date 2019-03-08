@@ -4,11 +4,26 @@ An extension to autocomplete the comment.
 
 ## Support Language
 
-* [x] Javascript/Typescript
-* [ ] Vue
-* [x] css/sass/less/scss
-* [x] HTML/markdown
-* [ ] JSON/yml/yaml
+- [x] Javascript/Typescript
+- [ ] Vue
+- [x] Dart
+- [x] Golang
+- [x] Css/Sass/Scss
+- [x] HTML
+- [x] Markdown
+- [x] XML
+- [x] JSON5
+- [x] YML/YAML
+- [x] Bash
+- [x] Makefile
+
+## Support Tool comments
+
+- [x] eslint
+- [x] tslint
+- [x] prettier
+- [x] typescript
+- [x] webpack
 
 ## [CHANGELOG](https://github.com/axetroy/vscode-comment-autocomplete/blob/master/CHANGELOG.md)
 
