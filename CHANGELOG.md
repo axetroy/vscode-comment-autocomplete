@@ -1,3 +1,12 @@
+## [0.3.2](https://github.com/axetroy/vscode-comment-autocomplete/compare/v0.3.1...v0.3.2) (2019-03-08)
+
+
+### Bug Fixes
+
+* bug ([d89d4fe](https://github.com/axetroy/vscode-comment-autocomplete/commit/d89d4fe))
+
+
+
 ## [0.3.1](https://github.com/axetroy/vscode-comment-autocomplete/compare/v0.3.0...v0.3.1) (2019-03-08)
 
 
