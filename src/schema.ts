@@ -1,32 +1,20 @@
 import * as vscode from "vscode";
 
+type matcher = RegExp;
+
 export interface ISchema {
   name: string;
   label: string;
   text: string;
   detail?: string;
   document?: vscode.MarkdownString | string;
-  style: ICommentRegExp;
+  style: matcher;
 }
 
-interface ICommentRegExp {
-  start: string;
-  end: string;
-}
-
-const commentStyle: { [k: string]: ICommentRegExp } = {
-  slash: {
-    start: "\\/*\\**\\s*$",
-    end: ".*"
-  },
-  star: {
-    start: "\\/*\\**\\s*$",
-    end: "\\**\\/"
-  },
-  dash: {
-    start: "<\\!-*\\s*$",
-    end: "-*>"
-  }
+const commentStyle: { [k: string]: matcher } = {
+  slash: /\/*\{1,}\s*$/,
+  star: /\/\**\s*$/,
+  dash: /<!-*\s*$/
 };
 
 export enum Language {
@@ -180,10 +168,7 @@ export const schemas: ISchemas[] = [
 ];
 
 // filter schema
-function filter(
-  schema: ISchema[],
-  style: ICommentRegExp | ICommentRegExp[]
-): ISchema[] {
+function filter(schema: ISchema[], style: matcher | matcher[]): ISchema[] {
   const styles = Array.isArray(style) ? style : [style];
   const result: ISchema[] = [];
   for (const s of schema) {
@@ -206,7 +191,7 @@ function generate(
   return styles.map(v => {
     let prefix = "";
     let suffix = "";
-    let style: ICommentRegExp;
+    let style: matcher;
     switch (v) {
       case Style.slash:
         prefix = "// ";

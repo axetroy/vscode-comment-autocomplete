@@ -32,13 +32,11 @@ export function activate(context: VSCODE.ExtensionContext) {
       this.insertText = schema.text.replace(reg, "$1");
 
       const line = document.lineAt(position.line).text;
-      const prefix = line
-        .slice(0, position.character)
-        .match(new RegExp(schema.style.start));
+      const prefix = line.slice(0, position.character).match(schema.style);
 
       // the text insert start and end
       const start = position.translate(0, prefix ? -prefix[0].length : 0);
-      const end = position.translate(0, start.character + schema.text.length);
+      const end = position.translate(0, 0);
 
       this.range = new VSCODE.Range(start, end);
 
@@ -83,15 +81,14 @@ export function activate(context: VSCODE.ExtensionContext) {
               }
 
               // the the whole line match
-              if (new RegExp("^" + schema.style.start).test(line)) {
+              if (new RegExp("^" + schema.style.source).test(line)) {
                 completes.push(
                   new CommentCompletionItem(schema, document, position)
                 );
                 continue;
               }
 
-              const validRegWithSecondType = new RegExp(schema.style.start);
-              const validMatcher = prefix.match(validRegWithSecondType);
+              const validMatcher = prefix.match(schema.style);
 
               if (validMatcher) {
                 if (validMatcher[0].length >= 2) {
@@ -102,7 +99,7 @@ export function activate(context: VSCODE.ExtensionContext) {
                 }
               }
 
-              const validRegWithSpace = new RegExp("\\s" + schema.style.start);
+              const validRegWithSpace = new RegExp("\\s" + schema.style.source);
               if (validRegWithSpace.test(prefix)) {
                 completes.push(
                   new CommentCompletionItem(schema, document, position)
