@@ -2,8 +2,21 @@
 import VSCODE = require("vscode");
 import { schemas, ISchema } from "./schema";
 
+interface IFocusArg {
+  start: VSCODE.Position;
+  end: VSCODE.Position;
+}
+
 export function activate(context: VSCODE.ExtensionContext) {
   const vs: typeof VSCODE = require("vscode");
+
+  vs.commands.registerCommand("comment-complete.focus", (argv: IFocusArg) => {
+    const editor = vs.window.activeTextEditor;
+    if (!editor) {
+      return;
+    }
+    editor.selection = new vs.Selection(argv.start, argv.end);
+  });
 
   class CommentCompletionItem extends vs.CompletionItem {
     constructor(
@@ -12,9 +25,11 @@ export function activate(context: VSCODE.ExtensionContext) {
       position: VSCODE.Position
     ) {
       super(schema.label, VSCODE.CompletionItemKind.Snippet);
-      this.insertText = schema.text;
+      const reg = /\$\{([^\}]+)\}/;
+
       this.detail = schema.detail;
       this.documentation = schema.document;
+      this.insertText = schema.text.replace(reg, "$1");
 
       const line = document.lineAt(position.line).text;
       const prefix = line
@@ -23,9 +38,25 @@ export function activate(context: VSCODE.ExtensionContext) {
 
       // the text insert start and end
       const start = position.translate(0, prefix ? -prefix[0].length : 0);
-      const end = position.translate(0, 0);
+      const end = position.translate(0, start.character + schema.text.length);
 
       this.range = new VSCODE.Range(start, end);
+
+      const matcher = schema.text.match(reg);
+
+      if (matcher) {
+        const content = matcher[1];
+        const index = matcher.index || 0;
+
+        const focusStart = start.translate(0, index);
+        const focusEnd = focusStart.translate(0, +content.length);
+
+        this.command = {
+          title: "focus",
+          command: "comment-complete.focus",
+          arguments: [{ document, start: focusStart, end: focusEnd }]
+        };
+      }
     }
   }
 

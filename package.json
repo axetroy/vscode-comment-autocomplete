@@ -38,7 +38,23 @@
     "onLanguage:sass",
     "onLanguage:markdown"
   ],
-  "contributes": {},
+  "contributes": {
+    "commands": [
+      {
+        "command": "comment-complete.focus",
+        "title": "focus",
+        "category": "comment-complete"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "comment-complete.focus",
+          "when": "never"
+        }
+      ]
+    }
+  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./ && npm run lint",

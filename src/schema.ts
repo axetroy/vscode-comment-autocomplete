@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 
 export interface ISchema {
+  name: string;
   label: string;
   text: string;
   detail?: string;
@@ -49,28 +50,54 @@ enum Style {
 }
 
 const common: ISchema[] = [
-  ...generate("TODO", [Style.slash, Style.star, Style.dash]),
-  ...generate("FIXME", [Style.slash, Style.star, Style.dash])
+  ...generate("TODO", [Style.slash, Style.star, Style.dash], {
+    // tslint:disable-next-line
+    text: "TODO: ${do what?}"
+  }),
+  ...generate("FIXME", [Style.slash, Style.star, Style.dash], {
+    // tslint:disable-next-line
+    text: "FIXME: ${fix what?}"
+  })
 ];
 
 const eslint: ISchema[] = [
-  ...generate("eslint-disable", [Style.slash, Style.star]),
+  ...generate("eslint-disable", [Style.slash, Style.star], {
+    // tslint:disable-next-line
+    text: "eslint-disable ${rule1, rule2, rule3}"
+  }),
   ...generate("eslint-enable", [Style.slash, Style.star]),
-  ...generate("eslint-disable-next-line", [Style.slash, Style.star])
+  ...generate("eslint-disable-next-line", [Style.slash, Style.star], {
+    // tslint:disable-next-line
+    text: "eslint-disable-next-line ${rule1, rule2, rule3}"
+  })
 ];
 
 const jslint: ISchema[] = [
   ...generate("jshint ignore:start", [Style.slash, Style.star]),
   ...generate("jshint ignore:end", [Style.slash, Style.star]),
-  ...generate("jshint strict: true", [Style.slash, Style.star]),
-  ...generate("jslint vars: true", [Style.slash, Style.star])
+  ...generate("jshint strict: true", [Style.slash, Style.star], {
+    // tslint:disable-next-line
+    text: "jshint strict: ${true}"
+  }),
+  ...generate("jslint vars: true", [Style.slash, Style.star], {
+    // tslint:disable-next-line
+    text: "jslint vars: ${true}"
+  })
 ];
 
-const webpack: ISchema[] = [...generate("webpackChunkName", [Style.star])];
+const webpack: ISchema[] = [
+  ...generate("webpackChunkName", [Style.star], {
+    // tslint:disable-next-line
+    text: "webpackChunkName: ${'chunkName'}"
+  })
+];
 
 const prettier: ISchema[] = [
   ...generate("prettier-ignore", [Style.slash, Style.star, Style.dash]),
-  ...generate("prettier-ignore-attribute", [Style.dash]),
+  ...generate("prettier-ignore-attribute", [Style.dash], {
+    // tslint:disable-next-line
+    text: "prettier-ignore-attribute ${attribute1, attribute2}"
+  }),
   ...generate("prettier-ignore-start", [Style.dash]),
   ...generate("prettier-ignore-end", [Style.dash])
 ];
@@ -81,13 +108,14 @@ const typescript: ISchema[] = [
 
 const tslint: ISchema[] = [
   ...generate("tslint:enable", [Style.slash, Style.star]),
-  ...generate("tslint:disable", [Style.slash, Style.star]),
-  ...generate("tslint:disable:rule1 rule2 rule3...", [Style.slash, Style.star]),
-  ...generate("tslint:disable-next-line", [Style.slash, Style.star]),
-  ...generate("tslint:disable-next-line:rule1 rule2 rule3...", [
-    Style.slash,
-    Style.star
-  ])
+  ...generate("tslint:disable", [Style.slash, Style.star], {
+    // tslint:disable-next-line
+    text: "tslint:disable: ${rule1 rule2 rule3...}"
+  }),
+  ...generate("tslint:disable-next-line", [Style.slash, Style.star], {
+    // tslint:disable-next-line
+    text: "tslint:disable-next-line: ${rule1 rule2 rule3...}"
+  })
 ];
 
 interface ISchemas {
@@ -143,7 +171,10 @@ export const schemas: ISchemas[] = [
   // html/markdown
   {
     selector: [Language.html, Language.markdown],
-    schemas: [...filter(common, [commentStyle.dash, commentStyle.dash])],
+    schemas: [
+      ...filter(common, [commentStyle.dash]),
+      ...filter(prettier, [commentStyle.dash])
+    ],
     triggerCharacters: ["<", "!", "-", " "]
   }
 ];
@@ -164,7 +195,11 @@ function filter(
 }
 
 // generate schema
-function generate(name: string, styles: Style | Style[]): ISchema[] {
+function generate(
+  name: string,
+  styles: Style[],
+  options: { text?: string } = {}
+): ISchema[] {
   if (!Array.isArray(styles)) {
     styles = [styles];
   }
@@ -192,8 +227,9 @@ function generate(name: string, styles: Style | Style[]): ISchema[] {
         style = commentStyle.slash;
     }
     return {
+      name: name.split(" ")[0],
       label: prefix + name + suffix,
-      text: prefix + name + suffix,
+      text: prefix + (options.text || name) + suffix,
       style
     };
   });
