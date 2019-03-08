@@ -17,7 +17,8 @@ const commentStyle: { [k: string]: matcher } = {
   star: /\/\**\s*$/,
   dash: /<!-*\s*$/,
   hash: /#{1,}\s*$/,
-  hashBracket: /#\[\s*$/
+  hashBracket: /#\[\s*$/,
+  hashArrow: /<#\s*$/
 };
 
 export enum Language {
@@ -76,8 +77,10 @@ export enum Language {
   python = "python",
   dotenv = "dotenv",
   gitignore = "gitignore",
-  // support #[ ]# styles
-  nim = "nim"
+  // support #[ ]# style
+  nim = "nim",
+  // support <# #> style
+  powershell = "powershell"
 }
 
 enum Style {
@@ -85,20 +88,35 @@ enum Style {
   star,
   dash,
   hash,
-  hashBracket
+  hashBracket,
+  hashArrow
 }
 
 const common: ISchema[] = [
   ...generate(
     "TODO",
-    [Style.slash, Style.star, Style.dash, Style.hash, Style.hashBracket],
+    [
+      Style.slash,
+      Style.star,
+      Style.dash,
+      Style.hash,
+      Style.hashBracket,
+      Style.hashArrow
+    ],
     {
       text: "TODO: ${do what?}"
     }
   ),
   ...generate(
     "FIXME",
-    [Style.slash, Style.star, Style.dash, Style.hash, Style.hashBracket],
+    [
+      Style.slash,
+      Style.star,
+      Style.dash,
+      Style.hash,
+      Style.hashBracket,
+      Style.hashArrow
+    ],
     {
       text: "FIXME: ${fix what?}"
     }
@@ -266,6 +284,12 @@ export const schemas: ISchemas[] = [
     selector: [Language.nim],
     schemas: [...filter(common, [commentStyle.hashBracket])],
     triggerCharacters: ["#", "["]
+  },
+  // <# #> style
+  {
+    selector: [Language.powershell],
+    schemas: [...filter(common, [commentStyle.hashArrow])],
+    triggerCharacters: ["<", "#"]
   }
 ];
 
@@ -317,6 +341,11 @@ function generate(
         prefix = "#[ ";
         suffix = " ]#";
         style = commentStyle.hashBracket;
+        break;
+      case Style.hashArrow:
+        prefix = "<# ";
+        suffix = " #>";
+        style = commentStyle.hashArrow;
         break;
       default:
         prefix = "// ";
