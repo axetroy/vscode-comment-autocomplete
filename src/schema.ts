@@ -12,7 +12,7 @@ export interface ISchema {
 }
 
 const commentStyle: { [k: string]: matcher } = {
-  slash: /\/*\{1,}\s*$/,
+  slash: /\/{1,}\s*$/,
   star: /\/\**\s*$/,
   dash: /<!-*\s*$/
 };
