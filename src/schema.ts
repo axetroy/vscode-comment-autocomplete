@@ -29,7 +29,8 @@ export enum Language {
   sass = "sass",
   html = "html",
   vue = "vue",
-  markdown = "markdown"
+  markdown = "markdown",
+  jsonc = "jsonc"
 }
 
 enum Style {
@@ -109,7 +110,8 @@ export const schemas: ISchemas[] = [
       Language.jsx,
       Language.ts,
       Language.tsx,
-      Language.vue
+      Language.vue,
+      Language.jsonc
     ],
     schemas: [...filter(common, [commentStyle.slash, commentStyle.star])],
     triggerCharacters: ["/", "*", " "]

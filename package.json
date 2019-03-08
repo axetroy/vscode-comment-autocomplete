@@ -36,7 +36,8 @@
     "onLanguage:less",
     "onLanguage:scss",
     "onLanguage:sass",
-    "onLanguage:markdown"
+    "onLanguage:markdown",
+    "onLanguage:jsonc"
   ],
   "contributes": {
     "commands": [
