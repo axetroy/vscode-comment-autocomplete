@@ -4,18 +4,7 @@ An extension to autocomplete the comment.
 
 ## Support Language
 
-- [x] Javascript/Typescript
-- [ ] Vue
-- [x] Dart
-- [x] Golang
-- [x] Css/Sass/Scss
-- [x] HTML
-- [x] Markdown
-- [x] XML
-- [x] JSON5
-- [x] YML/YAML
-- [x] Bash
-- [x] Makefile
+Most languages you ever see.
 
 ## Support Tool comments
 
