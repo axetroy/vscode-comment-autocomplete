@@ -61,7 +61,12 @@ export function activate(context: VSCODE.ExtensionContext) {
   for (const s of schemas) {
     context.subscriptions.push(
       vs.languages.registerCompletionItemProvider(
-        s.selector,
+        (s.selector as string[]).map(v => {
+          return {
+            scheme: "file",
+            language: v
+          };
+        }),
         {
           provideCompletionItems: (
             document: VSCODE.TextDocument,
