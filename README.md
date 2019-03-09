@@ -13,6 +13,7 @@ Most languages you ever see.
 - [x] prettier
 - [x] typescript
 - [x] webpack
+- [x] jsx
 
 ## [CHANGELOG](https://github.com/axetroy/vscode-comment-autocomplete/blob/master/CHANGELOG.md)
 

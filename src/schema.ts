@@ -138,7 +138,7 @@ const commonStyles = [
   Style.semicolon
 ];
 
-// refs: https://www.python.org/dev/peps/pep-0350/
+// SEE: https://www.python.org/dev/peps/pep-0350/
 const common: ISchema[] = [
   ...generate("TODO", commonStyles, {
     text: "TODO: ${do something}",
@@ -224,6 +224,13 @@ const common: ISchema[] = [
   ...generate("RVD", commonStyles, {
     text: "RVD: ${Review message}",
     document: "RVD: File-level indicator that review was conducted."
+  })
+];
+
+const jsx: ISchema[] = [
+  ...generate("@jsx h", [Style.star], {
+    text: "@jsx ${h}",
+    document: "Tell Babel to transform JSX into h() calls"
   })
 ];
 
@@ -319,6 +326,7 @@ export const schemas: ISchemas[] = [
       ...eslint,
       ...jslint,
       ...webpack,
+      ...jsx,
       ...filter(prettier, [commentStyle.slash, commentStyle.star])
     ],
     triggerCharacters: ["/", "*", " "]
@@ -330,6 +338,7 @@ export const schemas: ISchemas[] = [
       ...typescript,
       ...tslint,
       ...webpack,
+      ...jsx,
       ...filter(prettier, [commentStyle.slash, commentStyle.star])
     ],
     triggerCharacters: ["/", "*", " "]
