@@ -227,58 +227,299 @@ const common: ISchema[] = [
   })
 ];
 
+// SEE: https://babeljs.io/docs/en/babel-plugin-transform-react-jsx#custom
 const jsx: ISchema[] = [
   ...generate("@jsx h", [Style.star], {
     text: "@jsx ${h}",
-    document: "Tell Babel to transform JSX into h() calls"
+    document: new vscode.MarkdownString(
+      `"Tell \`Babel\` to transform JSX into \`h()\` calls"`
+    )
   })
 ];
 
+// SEE: https://eslint.org/docs/user-guide/configuring#disabling-rules-with-inline-comments
 const eslint: ISchema[] = [
   ...generate("eslint-disable", [Style.slash, Style.star], {
-    text: "eslint-disable ${rule1, rule2, rule3}"
+    text: "eslint-disable ${rule1, rule2, rule3}",
+    document: new vscode.MarkdownString(
+      `enable warnings for specific rules
+\`\`\`javascript
+/* eslint-disable */
+
+alert('foo');
+
+/* eslint-enable */
+\`\`\`
+      `
+    )
   }),
-  ...generate("eslint-enable", [Style.slash, Style.star]),
+  ...generate("eslint-enable", [Style.slash, Style.star], {
+    text: "eslint-enable ${rule1, rule2, rule3}",
+    document: new vscode.MarkdownString(
+      `enable warnings for specific rules
+\`\`\`javascript
+/* eslint-disable no-alert, no-console */
+
+alert('foo');
+console.log('bar');
+
+/* eslint-enable no-alert, no-console */
+\`\`\`
+
+To disable rule warnings in an entire file, put a \`/* eslint-disable */\` block comment at the top of the file:
+
+\`\`\`javascript
+/* eslint-disable */
+
+alert('foo');
+\`\`\`
+      `
+    )
+  }),
+  ...generate("eslint-disable-line", [Style.slash, Style.star], {
+    text: "eslint-disable-line ${rule1, rule2, rule3}",
+    document: new vscode.MarkdownString(
+      `disable warnings for specific line
+\`\`\`javascript
+alert('foo'); // eslint-disable-line
+\`\`\`
+      `
+    )
+  }),
   ...generate("eslint-disable-next-line", [Style.slash, Style.star], {
-    text: "eslint-disable-next-line ${rule1, rule2, rule3}"
+    text: "eslint-disable-next-line ${rule1, rule2, rule3}",
+    document: new vscode.MarkdownString(
+      `disable warnings for specific next line
+\`\`\`javascript
+// eslint-disable-next-line
+alert('foo');
+\`\`\`
+      `
+    )
+  }),
+  ...generate("eslint-global", [Style.slash, Style.star], {
+    text: "global ${var1, var2}",
+    document: new vscode.MarkdownString(
+      `to specify globals variable
+\`\`\`javascript
+// global deno
+console.log(deno.version)
+\`\`\`
+      `
+    )
+  }),
+  ...generate("eslint-env", [Style.slash, Style.star], {
+    text: "eslint-env ${env1, env2}",
+    document: new vscode.MarkdownString(
+      `to specify environment
+\`\`\`javascript
+/* eslint-env node, mocha */
+\`\`\`
+      `
+    )
   })
 ];
 
+// SEE: https://jshint.com/docs/
 const jslint: ISchema[] = [
-  ...generate("jshint ignore:start", [Style.slash, Style.star]),
-  ...generate("jshint ignore:end", [Style.slash, Style.star]),
+  ...generate("jshint ignore:start", [Style.slash, Style.star], {
+    document: new vscode.MarkdownString(
+      `A directive for telling JSHint to ignore a block of code.
+\`\`\`javascript
+// Code here will be linted with JSHint.
+/* jshint ignore:start */
+// Code here will be ignored by JSHint.
+/* jshint ignore:end */
+\`\`\`
+      `
+    )
+  }),
+  ...generate("jshint ignore:end", [Style.slash, Style.star], {
+    document: new vscode.MarkdownString(
+      `A directive for telling JSHint to ignore a block of code.
+\`\`\`javascript
+// Code here will be linted with JSHint.
+/* jshint ignore:start */
+// Code here will be ignored by JSHint.
+/* jshint ignore:end */
+\`\`\`
+      `
+    )
+  }),
+  ...generate("jshint ignore:line", [Style.slash, Style.star], {
+    document: new vscode.MarkdownString(
+      `ignore a single line with a trailing comment
+\`\`\`javascript
+ignoreThis(); // jshint ignore:line
+\`\`\`
+      `
+    )
+  }),
   ...generate("jshint strict: true", [Style.slash, Style.star], {
-    text: "jshint strict: ${true}"
+    text: "jshint strict: ${true}",
+    document: new vscode.MarkdownString(
+      `A directive for setting JSHint options.
+\`\`\`javascript
+/* jshint strict: true */
+\`\`\`
+      `
+    )
   }),
   ...generate("jslint vars: true", [Style.slash, Style.star], {
-    text: "jslint vars: ${true}"
+    text: "jslint vars: ${true}",
+    document: new vscode.MarkdownString(
+      `A directive for setting JSHint-compatible JSLint options.
+\`\`\`javascript
+/* jslint vars: true */
+\`\`\`
+      `
+    )
+  }),
+  ...generate("jslint globals", [Style.slash, Style.star], {
+    text: "jslint globals ${MY_LIB: false}",
+    document: new vscode.MarkdownString(
+      `A directive for telling JSHint about global variables that are defined elsewhere. If value is false (default), JSHint will consider that variable as read-only.
+\`\`\`javascript
+/* globals MY_LIB: false */
+\`\`\`
+      `
+    )
+  }),
+  ...generate("jslint exported", [Style.slash, Style.star], {
+    text: "exported ${EXPORTED_LIB}",
+    document: new vscode.MarkdownString(
+      `A directive for telling JSHint about global variables that are defined in the current file but used elsewhere.
+\`\`\`javascript
+/* exported EXPORTED_LIB */
+\`\`\`
+      `
+    )
   })
 ];
 
 const webpack: ISchema[] = [
   ...generate("webpackChunkName", [Style.star], {
-    text: "webpackChunkName: ${'chunkName'}"
+    text: "webpackChunkName: ${'chunkName'}",
+    document: new vscode.MarkdownString(
+      `specify chunk name
+\`\`\`javascript
+require(/* webpackChunkName: 'chunkName' */'typescript')
+\`\`\`
+      `
+    )
   })
 ];
 
+// SEE: https://prettier.io/docs/en/ignore.html
 const prettier: ISchema[] = [
-  ...generate("prettier-ignore", [Style.slash, Style.star, Style.arrowDash]),
-  ...generate("prettier-ignore-attribute", [Style.arrowDash], {
-    text: "prettier-ignore-attribute ${attribute1, attribute2}"
+  ...generate("prettier-ignore", [Style.slash, Style.star, Style.arrowDash], {
+    document: new vscode.MarkdownString(
+      `exclude the next node in the abstract syntax tree from formatting.
+### Javascript
+\`\`\`javascript
+matrix(
+  1, 0, 0,
+  0, 1, 0,
+  0, 0, 1
+)
+
+// prettier-ignore
+matrix(
+  1, 0, 0,
+  0, 1, 0,
+  0, 0, 1
+)
+\`\`\`
+
+### HTML
+
+\`\`\`html
+<!-- prettier-ignore -->
+<div         class="x"       >hello world</div            >
+\`\`\`
+
+### Markdown
+
+\`\`\`markdown
+<!-- prettier-ignore -->
+Do   not    format   this
+\`\`\`
+      `
+    )
   }),
-  ...generate("prettier-ignore-start", [Style.arrowDash]),
+  ...generate("prettier-ignore-attribute", [Style.arrowDash], {
+    text: "prettier-ignore-attribute ${attribute1, attribute2}",
+    document: new vscode.MarkdownString(
+      `
+\`\`\`html
+<!-- prettier-ignore-attribute -->
+<div
+  (mousedown)="       onStart    (    )         "
+  (mouseup)="         onEnd      (    )         "
+></div>
+
+<!-- prettier-ignore-attribute (mouseup) -->
+<div
+  (mousedown)="onStart()"
+  (mouseup)="         onEnd      (    )         "
+></div>
+\`\`\`
+      `
+    )
+  }),
+  ...generate("prettier-ignore-start", [Style.arrowDash], {
+    document: new vscode.MarkdownString(
+      `
+\`\`\`markdown
+<!-- prettier-ignore-start -->
+<!-- SOMETHING AUTO-GENERATED BY TOOLS - START -->
+
+| MY | AWESOME | AUTO-GENERATED | TABLE |
+|-|-|-|-|
+| a | b | c | d |
+
+<!-- SOMETHING AUTO-GENERATED BY TOOLS - END -->
+<!-- prettier-ignore-end -->
+\`\`\`
+      `
+    )
+  }),
   ...generate("prettier-ignore-end", [Style.arrowDash])
 ];
 
 const typescript: ISchema[] = [...generate("@ts-ignore", [Style.slash])];
 
+// SEE: https://palantir.github.io/tslint/usage/rule-flags/
 const tslint: ISchema[] = [
-  ...generate("tslint:enable", [Style.slash, Style.star]),
+  ...generate("tslint:enable", [Style.slash, Style.star], {
+    text: "tslint:enable: ${rule1 rule2 rule3...}",
+    document: new vscode.MarkdownString(
+      `enable the listed rules for the rest of the file
+\`\`\`typescript
+/* tslint:enable */
+\`\`\`
+      `
+    )
+  }),
   ...generate("tslint:disable", [Style.slash, Style.star], {
-    text: "tslint:disable: ${rule1 rule2 rule3...}"
+    text: "tslint:disable: ${rule1 rule2 rule3...}",
+    document: new vscode.MarkdownString(
+      `disable the listed rules for the rest of the file
+\`\`\`typescript
+/* tslint:disable */
+\`\`\`
+      `
+    )
   }),
   ...generate("tslint:disable-next-line", [Style.slash, Style.star], {
-    text: "tslint:disable-next-line: ${rule1 rule2 rule3...}"
+    text: "tslint:disable-next-line: ${rule1 rule2 rule3...}",
+    document: new vscode.MarkdownString(
+      `disables the listed rules for the next line
+\`\`\`typescript
+/* tslint:disable-next-line */
+\`\`\`
+      `
+    )
   })
 ];
 
@@ -465,7 +706,7 @@ function filter(schema: ISchema[], style: matcher | matcher[]): ISchema[] {
 function generate(
   name: string,
   styles: Style[],
-  options: { text?: string; document?: string } = {}
+  options: { text?: string; document?: string | vscode.MarkdownString } = {}
 ): ISchema[] {
   if (!Array.isArray(styles)) {
     styles = [styles];
