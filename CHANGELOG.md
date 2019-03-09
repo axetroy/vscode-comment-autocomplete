@@ -1,3 +1,13 @@
+## [0.4.1](https://github.com/axetroy/vscode-comment-autocomplete/compare/v0.4.0...v0.4.1) (2019-03-09)
+
+
+### Features
+
+* add support for jsx ([ef56706](https://github.com/axetroy/vscode-comment-autocomplete/commit/ef56706))
+* update comment document ([da19a62](https://github.com/axetroy/vscode-comment-autocomplete/commit/da19a62))
+
+
+
 # [0.4.0](https://github.com/axetroy/vscode-comment-autocomplete/compare/v0.3.4...v0.4.0) (2019-03-08)
 
 
