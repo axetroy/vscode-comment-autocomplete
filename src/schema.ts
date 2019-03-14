@@ -577,6 +577,7 @@ export const schemas: ISchemas[] = [
     selector: [Language.ts, Language.tsx],
     schemas: [
       ...typescript,
+      ...eslint,
       ...tslint,
       ...webpack,
       ...jsx,
