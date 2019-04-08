@@ -1,5 +1,7 @@
 # vscode-comment-autocomplete
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/axetroy/vscode-comment-autocomplete.svg)](https://greenkeeper.io/)
+
 An extension to autocomplete the comment.
 
 ## Support Language
